@@ -28,7 +28,7 @@ function App() {
 	}
 
 	const addValueToEnd = (value: string) => {
-		if (displayValue === '0') updateDisplayValue(value)
+		if (displayValue === '0' && value !== '.') updateDisplayValue(value)
 		else setDisplayValue(displayValue + value)
 	}
 
