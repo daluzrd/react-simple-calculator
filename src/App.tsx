@@ -1,5 +1,7 @@
-import { styled } from '@stitches/react'
 import { useState } from 'react'
+
+import { styled } from '@stitches/react'
+
 import CalculatorBody from './components/CalculatorBody'
 import CalculatorDisplay from './components/CalculatorDisplay'
 
@@ -14,9 +16,15 @@ const Calculator = styled('div', {
 
 function App() {
 	const [displayValue, setDisplayValue] = useState<string>('0')
+	const [operationsSaved, setOperationsSaved] = useState('')
+
+	const resetOperationsSaved = () => {
+		setOperationsSaved('')
+	}
 
 	const resetDisplayValue = () => {
 		setDisplayValue('0')
+		resetOperationsSaved()
 	}
 
 	const addValueToEnd = (value: string) => {
@@ -24,12 +32,18 @@ function App() {
 		else setDisplayValue(displayValue + value)
 	}
 
-	const updateDisplayValue = (value: string) => {
-		setDisplayValue(value)
+	const saveOperations = (operator: string) => {
+		if (operator !== '=') {
+			setOperationsSaved(operationsSaved + displayValue + operator)
+			setDisplayValue('0')
+		} else {
+			setDisplayValue(eval(`${operationsSaved}${displayValue}`))
+			resetOperationsSaved()
+		}
 	}
 
-	const doOperations = () => {
-		setDisplayValue(eval(displayValue))
+	const updateDisplayValue = (value: string) => {
+		setDisplayValue(value)
 	}
 
 	return (
@@ -37,7 +51,7 @@ function App() {
 			<CalculatorDisplay displayValue={displayValue}></CalculatorDisplay>
 			<CalculatorBody
 				addValueToEnd={addValueToEnd}
-				doOperations={doOperations}
+				saveOperations={saveOperations}
 				resetDisplayValue={resetDisplayValue}
 			></CalculatorBody>
 		</Calculator>

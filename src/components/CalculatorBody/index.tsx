@@ -27,11 +27,11 @@ const Button = styled('button', {
 
 interface CalculatorBodyProps {
 	addValueToEnd: (value: string) => void
+	saveOperations: (operator: string) => void
 	resetDisplayValue: () => void
-	doOperations: () => void
 }
 
-export default function CalculatorBody({ addValueToEnd, resetDisplayValue, doOperations }: CalculatorBodyProps) {
+export default function CalculatorBody({ addValueToEnd, saveOperations, resetDisplayValue }: CalculatorBodyProps) {
 	return (
 		<Body>
 			<Button
@@ -43,21 +43,21 @@ export default function CalculatorBody({ addValueToEnd, resetDisplayValue, doOpe
 			</Button>
 			<Button
 				onClick={() => {
-					addValueToEnd('/')
+					saveOperations('/')
 				}}
 			>
 				/
 			</Button>
 			<Button
 				onClick={() => {
-					addValueToEnd('*')
+					saveOperations('*')
 				}}
 			>
 				*
 			</Button>
 			<Button
 				onClick={() => {
-					addValueToEnd('-')
+					saveOperations('-')
 				}}
 			>
 				-
@@ -86,7 +86,7 @@ export default function CalculatorBody({ addValueToEnd, resetDisplayValue, doOpe
 			<Button
 				className={styles.plusButton}
 				onClick={() => {
-					addValueToEnd('+')
+					saveOperations('+')
 				}}
 			>
 				+
@@ -136,7 +136,7 @@ export default function CalculatorBody({ addValueToEnd, resetDisplayValue, doOpe
 			<Button
 				className={styles.equalButton}
 				onClick={() => {
-					doOperations()
+					saveOperations('=')
 				}}
 			>
 				=
