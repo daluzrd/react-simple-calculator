@@ -1,9 +1,10 @@
 import { styled } from '@stitches/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './App.module.scss'
 
 const Calculator = styled('div', {
 	display: 'flex',
+	height: '100vh',
 	flexDirection: 'column',
 
 	justifyContent: 'center',
@@ -14,6 +15,7 @@ const CalculatorDisplay = styled('div', {
 	display: 'flex',
 	justifyContent: 'end',
 	alignItems: 'end',
+	overflow: 'hidden',
 
 	width: 'calc(30% - 0.5rem)',
 	height: '5rem',
@@ -55,23 +57,9 @@ const Button = styled('button', {
 
 function App() {
 	const [displayValue, setDisplayValue] = useState<string>('0')
-	const [operations, setOperations] = useState<any[]>([])
 
 	const resetDisplayValue = () => {
 		setDisplayValue('0')
-	}
-
-	const resetOperations = () => {
-		setOperations([])
-	}
-
-	const saveDisplayValue = () => {
-		debugger
-		setOperations([...operations, Number.parseInt(displayValue)])
-	}
-
-	const saveOperation = (operator: string) => {
-		setOperations([...operations, operator])
 	}
 
 	const addValueToEnd = (value: string) => {
@@ -83,41 +71,9 @@ function App() {
 		setDisplayValue(value)
 	}
 
-	const mathOperations = (a: number, b: number, operator: string) => {
-		switch (operator) {
-			case '+':
-				return a + b
-			case '-':
-				return a - b
-			case '*':
-				return a * b
-			case '/':
-				return a / b
-			default:
-				throw new Error()
-		}
-	}
-
 	const doOperations = () => {
-		debugger
-
-		if (operations.length >= 3) {
-			let value = 0
-			const tempOperations = operations.slice()
-			value = mathOperations(tempOperations.shift(), tempOperations.shift(), tempOperations.shift())
-
-			while (tempOperations.length > 0) {
-				value = mathOperations(value, tempOperations.shift(), tempOperations.shift())
-			}
-
-			updateDisplayValue(value.toString())
-		}
+		setDisplayValue(eval(displayValue))
 	}
-
-	useEffect(() => {
-		setDisplayValue('0')
-		return () => {}
-	}, [operations])
 
 	return (
 		<Calculator>
@@ -127,7 +83,6 @@ function App() {
 			<CalculatorBody>
 				<Button
 					onClick={() => {
-						resetOperations()
 						resetDisplayValue()
 					}}
 				>
@@ -135,27 +90,21 @@ function App() {
 				</Button>
 				<Button
 					onClick={() => {
-						saveDisplayValue()
-						saveOperation('/')
-						resetDisplayValue()
+						addValueToEnd('/')
 					}}
 				>
 					/
 				</Button>
 				<Button
 					onClick={() => {
-						saveDisplayValue()
-						saveOperation('*')
-						resetDisplayValue()
+						addValueToEnd('*')
 					}}
 				>
 					*
 				</Button>
 				<Button
 					onClick={() => {
-						saveDisplayValue()
-						saveOperation('-')
-						resetDisplayValue()
+						addValueToEnd('-')
 					}}
 				>
 					-
@@ -184,9 +133,7 @@ function App() {
 				<Button
 					className={styles.plusButton}
 					onClick={() => {
-						saveDisplayValue()
-						saveOperation('+')
-						resetDisplayValue()
+						addValueToEnd('+')
 					}}
 				>
 					+
@@ -236,7 +183,6 @@ function App() {
 				<Button
 					className={styles.equalButton}
 					onClick={() => {
-						saveDisplayValue()
 						doOperations()
 					}}
 				>
@@ -250,7 +196,13 @@ function App() {
 				>
 					0
 				</Button>
-				<Button>.</Button>
+				<Button
+					onClick={() => {
+						addValueToEnd('.')
+					}}
+				>
+					.
+				</Button>
 			</CalculatorBody>
 		</Calculator>
 	)
